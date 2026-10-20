@@ -1,0 +1,24 @@
+# Local development database only. These credentials are not secrets: the
+# database listens on 127.0.0.1 and holds development data. Production uses a
+# managed database whose URL is set on the host, never in this repository.
+services:
+  postgres:
+    image: postgres:17-alpine
+    container_name: devdesk-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: devdesk
+      POSTGRES_PASSWORD: devdesk
+      POSTGRES_DB: devdesk
+    ports:
+      - '127.0.0.1:5432:5432'
+    volumes:
+      - devdesk-postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U devdesk -d devdesk']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  devdesk-postgres:

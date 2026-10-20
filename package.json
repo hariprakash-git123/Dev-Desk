@@ -1,0 +1,42 @@
+{
+  "name": "devdesk",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A developer command center: GitHub activity, tasks and website health in one dashboard.",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "postinstall": "npm run generate -w @devdesk/database",
+    "dev": "concurrently -n api,web,worker -c blue,green,magenta \"npm run dev -w @devdesk/api\" \"npm run dev -w @devdesk/web\" \"npm run dev -w @devdesk/worker\"",
+    "dev:web": "npm run dev -w @devdesk/web",
+    "dev:api": "npm run dev -w @devdesk/api",
+    "dev:worker": "npm run dev -w @devdesk/worker",
+    "db:up": "docker compose up -d --wait",
+    "db:migrate": "npm run migrate:dev -w @devdesk/database",
+    "db:deploy": "npm run migrate:deploy -w @devdesk/database",
+    "db:status": "npm run migrate:status -w @devdesk/database",
+    "build": "npm run build --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "ai:smoke": "npm run ai:smoke -w @devdesk/api"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "concurrently": "^10.0.6",
+    "eslint": "^10.12.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "prettier": "^3.9.10",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.2"
+  }
+}
